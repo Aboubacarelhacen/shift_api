@@ -1,0 +1,152 @@
+{
+  "info": {
+    "name": "Shift Management API",
+    "_postman_id": "9a4bf9e6-8f4f-49e6-8fd8-1a2dc7f9b1c2",
+    "description": "Postman collection for Shift Management Rails API (auth, employees, shifts, assignments, swap requests, dashboard). Use the environment file to set base_url and jwt variables.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [ {"key": "Content-Type", "value": "application/json"} ],
+            "body": {"mode": "raw", "raw": "{\n  \"user\": {\n    \"email\": \"{{admin_email}}\",\n    \"password\": \"{{admin_password}}\"\n  }\n}"},
+            "url": {"raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth","login"]}
+          },
+          "response": []
+        },
+        {
+          "name": "Register (Employee)",
+          "request": {
+            "method": "POST",
+            "header": [ {"key": "Content-Type", "value": "application/json"} ],
+            "body": {"mode": "raw", "raw": "{\n  \"user\": {\n    \"email\": \"newuser@example.com\",\n    \"password\": \"password\",\n    \"password_confirmation\": \"password\",\n    \"full_name\": \"New User\"\n  }\n}"},
+            "url": {"raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth","register"]}
+          },
+          "response": []
+        },
+        {
+          "name": "Me",
+          "request": {
+            "method": "GET",
+            "header": [ {"key": "Authorization", "value": "Bearer {{jwt}}"} ],
+            "url": {"raw": "{{base_url}}/auth/me", "host": ["{{base_url}}"], "path": ["auth","me"]}
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "DELETE",
+            "header": [ {"key": "Authorization", "value": "Bearer {{jwt}}"} ],
+            "url": {"raw": "{{base_url}}/auth/logout", "host": ["{{base_url}}"], "path": ["auth","logout"]}
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Employees",
+      "item": [
+        {
+          "name": "List Employees",
+          "request": {
+            "method": "GET",
+            "header": [ {"key": "Authorization", "value": "Bearer {{jwt}}"} ],
+            "url": {"raw": "{{base_url}}/employees", "host": ["{{base_url}}"], "path": ["employees"]}
+          },
+          "response": []
+        },
+        {
+          "name": "Create Employee",
+          "request": {
+            "method": "POST",
+            "header": [ {"key": "Content-Type", "value": "application/json"},{"key":"Authorization","value":"Bearer {{jwt}}"} ],
+            "body": {"mode": "raw", "raw": "{\n  \"employee\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Doe\",\n    \"email\": \"jane.doe@example.com\",\n    \"phone\": \"555-1111\",\n    \"team\": \"Kitchen\",\n    \"role\": \"Cook\",\n    \"active\": true\n  }\n}"},
+            "url": {"raw": "{{base_url}}/employees", "host": ["{{base_url}}"], "path": ["employees"]}
+          },
+          "response": []
+        },
+        {
+          "name": "Show Employee",
+          "request": {
+            "method": "GET",
+            "header": [ {"key": "Authorization", "value": "Bearer {{jwt}}"} ],
+            "url": {"raw": "{{base_url}}/employees/{{employee_id}}", "host": ["{{base_url}}"], "path": ["employees","{{employee_id}}"]}
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Shifts",
+      "item": [
+        {
+          "name": "List Shifts",
+          "request": {"method":"GET","header":[{"key":"Authorization","value":"Bearer {{jwt}}"}],"url":{"raw":"{{base_url}}/shifts","host":["{{base_url}}"],"path":["shifts"]}},"response":[]
+        },
+        {
+          "name": "Create Shift",
+          "request": {"method":"POST","header":[{"key":"Content-Type","value":"application/json"},{"key":"Authorization","value":"Bearer {{jwt}}"}],"body":{"mode":"raw","raw":"{\n  \"shift\": {\n    \"title\": \"Morning\",\n    \"date\": \"2025-11-08\",\n    \"starts_at\": \"2025-11-08T09:00:00Z\",\n    \"ends_at\": \"2025-11-08T13:00:00Z\",\n    \"location\": \"Kitchen\",\n    \"role_required\": \"Cook\",\n    \"capacity\": 3\n  }\n}"},"url":{"raw":"{{base_url}}/shifts","host":["{{base_url}}"],"path":["shifts"]}},"response":[]
+        },
+        {
+          "name": "Assign Employee to Shift",
+          "request": {"method":"POST","header":[{"key":"Content-Type","value":"application/json"},{"key":"Authorization","value":"Bearer {{jwt}}"}],"body":{"mode":"raw","raw":"{\n  \"employee_id\": {{employee_id}}\n}"},"url":{"raw":"{{base_url}}/shifts/{{shift_id}}/assignments","host":["{{base_url}}"],"path":["shifts","{{shift_id}}","assignments"]}},"response":[]
+        },
+        {
+          "name": "Unassign Employee from Shift",
+          "request": {"method":"DELETE","header":[{"key":"Authorization","value":"Bearer {{jwt}}"}],"url":{"raw":"{{base_url}}/shifts/{{shift_id}}/assignments/{{employee_id}}","host":["{{base_url}}"],"path":["shifts","{{shift_id}}","assignments","{{employee_id}}"]}},"response":[]
+        }
+      ]
+    },
+    {
+      "name": "Swap Requests",
+      "item": [
+        {"name":"List Swap Requests","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{jwt}}"}],"url":{"raw":"{{base_url}}/swap-requests","host":["{{base_url}}"],"path":["swap-requests"]}},"response":[]},
+        {"name":"Create Swap Request","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"},{"key":"Authorization","value":"Bearer {{jwt}}"}],"body":{"mode":"raw","raw":"{\n  \"shift_id\": {{shift_id}},\n  \"to_employee_id\": {{to_employee_id}},\n  \"reason\": \"Need to attend appointment\"\n}"},"url":{"raw":"{{base_url}}/swap-requests","host":["{{base_url}}"],"path":["swap-requests"]}},"response":[]},
+        {"name":"Accept Swap","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{jwt}}"}],"url":{"raw":"{{base_url}}/swap-requests/{{swap_request_id}}/accept","host":["{{base_url}}"],"path":["swap-requests","{{swap_request_id}}","accept"]}},"response":[]},
+        {"name":"Reject Swap","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"},{"key":"Authorization","value":"Bearer {{jwt}}"}],"body":{"mode":"raw","raw":"{\n  \"reason\": \"Insufficient coverage\"\n}"},"url":{"raw":"{{base_url}}/swap-requests/{{swap_request_id}}/reject","host":["{{base_url}}"],"path":["swap-requests","{{swap_request_id}}","reject"]}},"response":[]},
+        {"name":"Cancel Swap","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{jwt}}"}],"url":{"raw":"{{base_url}}/swap-requests/{{swap_request_id}}/cancel","host":["{{base_url}}"],"path":["swap-requests","{{swap_request_id}}","cancel"]}},"response":[]}
+      ]
+    },
+    {
+      "name": "Dashboard / Teams / My Shifts",
+      "item": [
+        {"name":"Dashboard Stats","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{jwt}}"}],"url":{"raw":"{{base_url}}/dashboard/stats","host":["{{base_url}}"],"path":["dashboard","stats"]}},"response":[]},
+        {"name":"Dashboard Activity","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{jwt}}"}],"url":{"raw":"{{base_url}}/dashboard/activity","host":["{{base_url}}"],"path":["dashboard","activity"]}},"response":[]},
+        {"name":"Teams","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{jwt}}"}],"url":{"raw":"{{base_url}}/teams","host":["{{base_url}}"],"path":["teams"]}},"response":[]},
+        {"name":"My Shifts","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{jwt}}"}],"url":{"raw":"{{base_url}}/my-shifts","host":["{{base_url}}"],"path":["my-shifts"]}},"response":[]}
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "exec": [
+          "if (pm.response.code === 200 && pm.request.url.path.join('/') === 'auth/login') {",
+          "  const json = pm.response.json();",
+          "  if (json.token) { pm.environment.set('jwt', json.token); }",
+          "}",
+          "if (pm.response.code === 201 && pm.request.url.path[0] === 'employees') {",
+          "  const json = pm.response.json();",
+          "  if (json.id) { pm.environment.set('employee_id', json.id); }",
+          "}",
+          "if (pm.response.code === 201 && pm.request.url.path[0] === 'shifts') {",
+          "  const json = pm.response.json();",
+          "  if (json.id) { pm.environment.set('shift_id', json.id); }",
+          "}",
+          "if (pm.request.url.path[0] === 'swap-requests' && pm.response.code === 201) {",
+          "  const json = pm.response.json();",
+          "  if (json.id) { pm.environment.set('swap_request_id', json.id); }",
+          "}"
+        ],
+        "type": "text/javascript"
+      }
+    }
+  ]
+}
