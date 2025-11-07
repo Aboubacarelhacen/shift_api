@@ -17,7 +17,7 @@ gem "bcrypt", "~> 3.1"
 
 # Authentication: Devise + JWT
 gem "devise"
-gem "devise-jwt", "~> 0.11.0"
+gem "devise-jwt", "~> 0.12.1"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
