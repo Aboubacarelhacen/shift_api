@@ -14,7 +14,7 @@ RSpec.describe 'Auth API', type: :request do
         },
         required: %w[email password full_name]
       }
-      response '201', 'created' do
+      response '200', 'ok' do
         let(:user) { { email: 'test@example.com', password: 'password', full_name: 'Test User' } }
         run_test!
       end

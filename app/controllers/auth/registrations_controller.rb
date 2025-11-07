@@ -6,9 +6,18 @@ module Auth
 
     def respond_with(resource, _opts = {})
       if resource.persisted?
-        render json: { token: current_token, user: ActiveModelSerializers::SerializableResource.new(resource).as_json }, status: :created
+        render json: {
+          status: 200,
+          message: 'Successfully registered',
+          token: current_token,
+          user: ActiveModelSerializers::SerializableResource.new(resource).as_json
+        }, status: :ok
       else
-        render json: { error: 'Registration failed', details: resource.errors.full_messages }, status: :unprocessable_entity
+        render json: {
+          status: 422,
+          error: 'Registration failed',
+          details: resource.errors.full_messages
+        }, status: :unprocessable_entity
       end
     end
 
